@@ -16,13 +16,15 @@ module Main
     ( main
     ) where
 
-import Hasql.Connection
+import Hasql.Connection (acquire)
+import Hasql.Connection.Setting (connection)
+import Hasql.Connection.Setting.Connection (string)
 import Hasql.MigrationTest
 import Test.Hspec (hspec)
 
 main :: IO ()
 main = do
-    conE <- acquire "dbname=test"
+    conE <- acquire [ connection (string "dbname=postgres") ]
     case conE of
       Right con -> hspec (migrationSpec con)
       Left err -> putStrLn $ show err
